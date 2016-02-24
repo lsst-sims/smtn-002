@@ -49,7 +49,7 @@ the observed von Karman profile (which has wider wings than a
 gaussian), :math:`FWHM_{geom}`:
 
 .. math::
-     FWHM_{eff} = (FWHM_{geom} - 0.50) / 0.822
+     FWHM_{eff} = (FWHM_{geom} - 0.052) / 0.822
 
 :math:`FWHM_{geom}` is typically slightly smaller than
 :math:`FWHM_{eff}`. The conversion factor was calculated by
@@ -227,6 +227,61 @@ is the sum of the hardware throughput in a particular bandpass
 |y     |23.73| 0.02  |0.18 |
 +------+-----+-------+-----+
 
+These values are used within OpSim to calculate m5 values for each
+pointing in the ``calc_m5`` function in `gen_output.py
+<https://github.com/lsst/sims_operations/blob/master/tools/schema_tools/gen_output.py>`_
+within the `sims_operations
+<https://github.com/lsst/sims_operations>`_ codebase.
+
+The remaining required inputs to calculate m5 in OpSim are the sky
+brightness and the seeing, as the airmass and exposure time will come
+from the scheduling data itself.
+
+The sky brightness is currently
+calculated using a V-band sky brightness model based on Krisciunas &
+Schafer (1991) `(K&S) <http://adsabs.harvard.edu/abs/1991PASP..103.1033K>`_,
+which is then adjusted to give sky brightness values in various
+bandpasses using color terms that depend on the phase of the
+moon. The V-band sky brightness calculations are implemented in the
+`AstronomicalSky.py <https://github.com/lsst/sims_operations/blob/master/python/lsst/sims/operations/AstronomicalSky.py>`_
+module of OpSim, and the per-filter adjustments based on lunar phase
+are done in
+`Filters.py <https://github.com/lsst/sims_operations/blob/master/python/lsst/sims/operations/Filters.py>`_.
+The current OpSim model simply sets y band skybrightness to 17.3 and implements a
+step-function for twilight if the altitude of the sun is above -18
+degrees, setting the sky brightness to 17.0 in z and y (and the
+scheduler is then constrained to observed in z and y during this time,
+currently). In the near future we will be updating the OpSim sky
+brightness model, to a new
+`sims_skybrightness <https://github.com/lsst/sims_skybrightness>`_
+model that more closely follows the `ESO sky calculator
+<https://www.eso.org/observing/etc/bin/gen/form?INS.MODE=swspectr+INS.NAME=SKYCALC>`_
+along with an empirical model for twilight. The sims_skybrightness model has
+been validated with nearly a year of on-site all-sky measurements. The current model
+has various flaws compared to the upcoming new model, but for the most
+part these flaws result in a brighter sky brightness value being used
+currently than the more realistic sims_skybrightness model predicts
+(see `comparison <https://community.lsst.org/t/comparing-eso-sky-model-to-current-opsim-sky-values/489>`_).
+
+The input seeing data used in OpSim are the atmosphere-only FWHM at
+500 nm at zenith,  based on three years of on-site DIMM
+measurements. The raw atmospheric FWHM values (:math:`FWHM_{500}`) are adjusted to
+the image quality delivered by the entire system by
+
+.. math::
+   FWHM_{sys}(X) = \sqrt{(telSeeing \, X^{0.6})^2 + opticalDesign^2 + cameraSeeing^2}
+
+   FWHM_{atm}(X) = FWHM_{500} \, (\frac{500nm}{lambda_{eff}})^{0.3} \,   (X)^{0.6}
+
+   FWHM_{eff}(X) = 1.16 \sqrt{FWHM_{sys}^2 + 1.04 \, FWHM_{atm}^2}
+
+
+where the system contributions are telSeeing = 0.25”, opticalDesign =
+0.08”, and cameraSeeing = 0.30”. :math:`\lambda_{eff}` is the
+effective wavelength for each filter:  366, 482, 622, 754, 869 and
+971 nm respectively for u, g, r, i, z, y.
+ 
+
 Data Sources and References
 ------------------------------------
 
@@ -288,4 +343,4 @@ the moon, zodiacal light, airglow and sky emission lines - it is based
 on the `ESO sky calculator
 <https://www.eso.org/observing/etc/bin/gen/form?INS.MODE=swspectr+INS.NAME=SKYCALC>`_
 with the addition of a twilight sky model based on observational data
-from the LSST site. 
+from the LSST site.
