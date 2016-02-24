@@ -84,10 +84,10 @@ probability of reaching the focal plane and being converted into
 electrons and integrating over wavelength (:math:`S(\lambda)`):
 
 .. math::
-   C = \frac {expTime \,  effArea} {gain \, h} \int { F_\nu(\lambda) \, S(\lambda)  / \lambda  d\lambda }
+   C = \frac {expTime \,  effArea} {g \, h} \int { F_\nu(\lambda) \, S(\lambda)  / \lambda  d\lambda }
 
 where expTime = exposure time in seconds (typically 30 seconds for LSST), effArea
-= effective collecting area in cm^2 (effective area-weighted diameter for the LSST primary,
+= effective collecting area in cm^2 (effective area-weighted clear aperture diameter for the LSST primary,
 when occultation from the secondary and tertiary mirrors and
 vignetting effects are included, is 6.423 m), and h = Planck constant. We
 can also use the above formula, together with a conversion from counts
