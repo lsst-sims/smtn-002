@@ -87,7 +87,7 @@ electrons and integrating over wavelength (:math:`S(\lambda)`):
    C = \frac {expTime \,  effArea} {gain \, h} \int { F_\nu(\lambda) \, S(\lambda)  / \lambda  d\lambda }
 
 where expTime = exposure time in seconds (typically 30 seconds for LSST), effArea
-= effective collecting area in cm^2 (effective diameter for the LSST primary,
+= effective collecting area in cm^2 (effective area-weighted diameter for the LSST primary,
 when occultation from the secondary and tertiary mirrors and
 vignetting effects are included, is 6.423 m), and h = Planck constant. We
 can also use the above formula, together with a conversion from counts
@@ -310,6 +310,10 @@ Official project documents not under change control -
 +---------------------------------------------------------+--------+------------------------------------------------------+
 |Focal plane coverage (fill factor in active area of FOV) | 91%    | Calculated from focal plane models                   |
 +---------------------------------------------------------+--------+------------------------------------------------------+
+
+The area-weighted clear aperture is 6.423 m across the entire field of view, although this varies with location. Near the center,
+the clear aperture is 6.7 m, while near the edge of the field of view it rolls off by about 10%. 6.423 m is the area-weighted
+average across the full field of view.
 
 Throughput curves: `syseng_throughputs github repo <https://github.com/lsst-pst/syseng_throughputs>`_:
 
