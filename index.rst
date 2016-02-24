@@ -89,27 +89,28 @@ electrons and integrating over wavelength (:math:`S(\lambda)`):
 where expTime = exposure time in seconds (typically 30 seconds for LSST), effArea
 = effective collecting area in cm^2 (effective diameter for the LSST primary,
 when occultation from the secondary and tertiary mirrors and
-vignetting effects are included, is 6.5m), and h = Planck constant. We
+vignetting effects are included, is 6.423 m), and h = Planck constant. We
 can also use the above formula, together with a conversion from counts
 to AB magnitudes, to calculate the "instrumental zeropoint" in each
 bandpass, the magnitude which would produce one ADU-count per second. The throughput curves used for this analysis are
 based on the throughput components in the `syseng_throughputs <https://github.com/lsst-pst/syseng_throughputs>`_ repository.
-There is more summary information on the origin of these throughput curves in the section 'Data Sources' below.
+There is more information on the origin of these throughput
+curves and other key number data in the section 'Data Sources' below.
 
 +------+--------------------------------------------+
 |Filter|Instrumental Zeropoint (exptime=1s, gain=1) |
 +------+--------------------------------------------+
-|u     |     26.53                                  |
+|u     |     26.50                                  |
 +------+--------------------------------------------+
-|g     |     28.33                                  |
+|g     |     28.30                                  |
 +------+--------------------------------------------+
-|r     |      28.15                                 |
+|r     |      28.13                                 |
 +------+--------------------------------------------+
-|i     |      27.82                                 |
+|i     |      27.79                                 |
 +------+--------------------------------------------+
-|z     |    27.43                                   |
+|z     |    27.40                                   |
 +------+--------------------------------------------+
-|y     |    26.61                                   |
+|y     |    26.58                                   |
 +------+--------------------------------------------+
 
 The expected sky brightness at zenith, in dark sky, has been
@@ -117,7 +118,7 @@ calculated in each LSST bandpass by generating a dark sky spectrum,
 using data from UVES and Gemini near-IR combined with an ESO sky
 spectrum, with a slight normalization in the u and y bands to match the median dark sky values
 reported by SDSS. The resulting zenith, dark sky brightness values are
-in good agreement with other measurements from CTIO and ESO. 
+in good agreement with other measurements from CTIO and ESO.
 
 +------+--------------------------------+
 |Filter|Sky brightness (mag/arcsecond^2)|
@@ -150,21 +151,21 @@ sky, zenith case. (Note, this is implemented in the ``calcm5`` method of the
 module in `sims_photUtils
 <https://github.com/lsst/sims_photUtils>`_). The resulting values are
 
-+------+-----+
-|Filter|m5   |
-+------+-----+
-|u     |23.62|
-+------+-----+
-|g     |24.85|
-+------+-----+
-|r     |24.39|
-+------+-----+
-|i     |23.94|
-+------+-----+
-|z     |23.36|
-+------+-----+
-|y     |22.45|
-+------+-----+
++------+------+
+|Filter|m5    |
++------+------+
+|u     |23.60 |
++------+------+
+|g     |24.83 |
++------+------+
+|r     |24.38 |
++------+------+
+|i     |23.92 |
++------+------+
+|z     |23.35 |
++------+------+
+|y     |22.44 |
++------+------+
 
 
 Calculating m5 values in the LSST Operations Simulator
@@ -211,21 +212,21 @@ total system throughput in a particular bandpass and :math:`\Sigma_b`
 is the sum of the hardware throughput in a particular bandpass
 (without the atmosphere).
 
-+------+-----+-------+-----+
-|Filter|Cm   |dCm_inf|k_atm|
-+------+-----+-------+-----+
-|u     |22.94| 0.56  |0.50 |
-+------+-----+-------+-----+
-|g     |24.46| 0.12  |0.21 |
-+------+-----+-------+-----+
-|r     |24.48| 0.06  |0.13 |
-+------+-----+-------+-----+
-|i     |24.34| 0.05  |0.10 |
-+------+-----+-------+-----+
-|z     |24.18| 0.03  |0.07 |
-+------+-----+-------+-----+
-|y     |23.73| 0.02  |0.18 |
-+------+-----+-------+-----+
++------+------+-------+-----+
+|Filter|Cm    |dCm_inf|k_atm|
++------+------+-------+-----+
+|u     |22.91 | 0.57  |0.50 |
++------+------+-------+-----+
+|g     |24.45 | 0.12  |0.21 |
++------+------+-------+-----+
+|r     |24.46 | 0.06  |0.13 |
++------+------+-------+-----+
+|i     |24.33 | 0.05  |0.10 |
++------+------+-------+-----+
+|z     |24.17 | 0.03  |0.07 |
++------+------+-------+-----+
+|y     |23.71 | 0.02  |0.18 |
++------+------+-------+-----+
 
 These values are used within OpSim to calculate m5 values for each
 pointing in the ``calc_m5`` function in `gen_output.py
@@ -293,10 +294,11 @@ Change controlled documents:
 
 Official project documents not under change control -
  * The LSST Overview Paper <http://www.lsst.org/content/lsst-science-drivers-reference-design-and-anticipated-data-products>
-
+ * LSST Key Numbers <http://lsst.org/scientists/keynumbers>
+ * LSST-PST Syseng_throughputs components git repository  <https://github.com/lsst-pst/syseng_throughputs>
 
 +---------------------------------------------------------+--------+------------------------------------------------------+
-|Primary mirror clear aperture                            |  6.5 m | LSE-29, LSR-REQ-0003                                 |
+|Primary mirror clear aperture                            | 6.423 m| LSE-29, LSR-REQ-0003, LSST Key Numbers               |
 +---------------------------------------------------------+--------+------------------------------------------------------+
 |Diameter of field of view                                | 3.5 deg| LSE-29, LSR-REQ-0004                                 |
 +---------------------------------------------------------+--------+------------------------------------------------------+
@@ -316,7 +318,8 @@ Throughput curves: `syseng_throughputs github repo <https://github.com/lsst-pst/
     consideration.  The filter transmission curves match those provided as
     specifications to vendors, and are derived from LSE-30,
     OSS-REQ-0240.
-    Mirror reflectivities and lens transmission curves are
+    Mirror reflectivities are based on lab measurements of pristine
+    witness samples; the losses  and lens transmission curves are
     based on expected performance curves. The atmospheric transmission
     is based on MODTRAN models of the atmosphere at Cerro Pachon, with
     the addition of a conservative amount of aerosols. The
