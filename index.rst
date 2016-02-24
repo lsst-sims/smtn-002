@@ -272,7 +272,7 @@ the image quality delivered by the entire system by
 .. math::
    FWHM_{sys}(X) = \sqrt{(telSeeing \, X^{0.6})^2 + opticalDesign^2 + cameraSeeing^2}
 
-   FWHM_{atm}(X) = FWHM_{500} \, (\frac{500nm}{lambda_{eff}})^{0.3} \,   (X)^{0.6}
+   FWHM_{atm}(X) = FWHM_{500} \, (\frac{500nm}{\lambda_{eff}})^{0.3} \,   (X)^{0.6}
 
    FWHM_{eff}(X) = 1.16 \sqrt{FWHM_{sys}^2 + 1.04 \, FWHM_{atm}^2}
 
@@ -327,7 +327,7 @@ Throughput curves: `syseng_throughputs github repo <https://github.com/lsst-pst/
     LSE-29 and LSE-30. More information on the throughput curves for
     each component, along with the time-averaged losses applied to
     each component due to surface contamination and condensation, is
-    available in the `README <https://github.com/lsst-pst/syseng_throughputs/blob/master/README.md>`_
+    available in the `README <https://github.com/lsst-pst/syseng_throughputs/blob/master/README.md>`_.
 
 The throughput curves in the syseng_throughputs repository track
 the expected performance of the components of the LSST systems.
@@ -347,3 +347,10 @@ on the `ESO sky calculator
 <https://www.eso.org/observing/etc/bin/gen/form?INS.MODE=swspectr+INS.NAME=SKYCALC>`_
 with the addition of a twilight sky model based on observational data
 from the LSST site.
+
+The conversion from atmospheric FWHM to delivered image quality is
+based on ray-trace simulations by Bo Xin (LSST Systems
+Engineering). The atmospheric FWHM measurements come from an on-site
+DIMM, described in more depth in the Site Selection documents. The
+DIMM measurements were cross-checked with measurements coming from
+nearby atmospheric monitoring systems from other observatories. 
