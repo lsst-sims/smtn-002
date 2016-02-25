@@ -1,5 +1,5 @@
 Calculating SNR
-----------------
+===============
 
 Calculating either signal to noise ratios for various sources, or
 5-sigma point source limiting magnitudes for LSST can be accomplished
@@ -8,94 +8,53 @@ information on the expected LSST camera and telescope components.
 
 The appropriate methodology to calculate SNR values for PSF-optimized
 photometry is outlined in the LSST Change Controlled Document
-`LSE-40 <http://ls.st/lse-40>`_, although this document is awaiting
-updates to match new throughput curves and updated information on how
+`LSE-40 <http://ls.st/lse-40>`_, and partially summarized below. Note
+that LSE-40 is awaiting updates to match new throughput curves and updated information on how
 we're handling the PSF profile which means the actual values
-calculated in this document are outdated.
+calculated in that document are outdated.
 
-The algorithms described in `LSE-40 <http://ls.st/lse-40>`_ are implemented in the LSST
-`sims_photUtils <http://github.com/lsst/sims_photUtils>`_ package. In
-particular, the
-`SignalToNoise
-<https://github.com/lsst/sims_photUtils/blob/master/python/lsst/sims/photUtils/SignalToNoise.py>`_
-module calculates signal to noise ratios and limiting magnitudes (m5)
-values. The SNR calculation per 30 second visit (composed of 2 back-to-back 15 second exposures)
-can be summarized as follows:
+The SNR calculation can be summarized as follows:
 
 .. math::
     SNR = \frac{C } {\sqrt{C/g + ( B/g + \sigma^2_{instr}) \, n_{eff}}}
 
     n_{eff} = 2.266 \, (FWHM_{eff} / pixelScale)^2
 
-where C = total source counts, B = sky background counts per pixel,
-and g = gain (expected gain is 2.3 electron/ADU, but for purposes of
-calculating SNR or m5, it can safely be assumed to be 1).
+where C = total source counts, B = sky background counts per
+pixel, :math:`\sigma_{instr}` is the instrumental noise per pixel (all
+in ADU) and g = gain. The LSST expected gain is 2.3 electron/ADU, but for purposes of
+calculating SNR or m5, it can safely be assumed to be 1, which has the
+nice property that then all quantities are equivalent in ADU or
+photo-electrons.
 
-The instrumental noise, :math:`\sigma_{instr}`, can be calculated by
+Source Counts
+-------------
 
-.. math::
-   \sigma_{instr}^2 = (readNoise^2 + (darkCurrent * expTime)) * n_{exp}
-
-where the current requirement place upper limits of 0.2 photo-electrons/second/pixel
-on the dark current and 8.8 photo-electrons/pixel/exposure on the readnoise. The current
-LSST observing plan is to take back-to-back exposures of the same field, each
-exposure 15 seconds long, for a total of :math:`n_{exp}`=2 exposures per 30 second
-long "visit". The total instrumental noise per visit is then 12.7 photo-electrons.
-
-The effective number of pixels in the PSF, :math:`n_{eff}`, is
-calculated assuming a single gaussian PSF function, and so we
-calculate :math:`FWHM_{eff}` from the PSF determined from measuring
-the observed von Karman profile (which has wider wings than a
-gaussian), :math:`FWHM_{geom}`:
-
-.. math::
-     FWHM_{eff} = (FWHM_{geom} - 0.052) / 0.822
-
-:math:`FWHM_{geom}` is typically slightly smaller than
-:math:`FWHM_{eff}`. The conversion factor was calculated by
-generating PSF profiles using raytrace software with models of the
-LSST mirrors and camera system and will be described in a planned
-update of `LSE-40 <http://ls.st/lse-40>`_ and the `LSST Overview Paper <http://arxiv.org/pdf/0805.2366.pdf>`_.
-The expected median :math:`FWHM_{eff}` at zenith in the various LSST
-bandpasses is
-
-+------+-------------------+
-|Filter|:math:`FWHM_{eff}` |
-+------+-------------------+
-|u     | 0.92"             |
-+------+-------------------+
-|g     | 0.87"             |
-+------+-------------------+
-|r     | 0.83"             |
-+------+-------------------+
-|i     | 0.80"             |
-+------+-------------------+
-|z     | 0.78"             |
-+------+-------------------+
-|y     | 0.76"             |
-+------+-------------------+
-
-where this includes the expected/modeled telescope contribution as well as the distribution of IQ measurements
-from an on-site DIMM.
-
-The total counts in the focal plane from any source can be calculated by multiplying the source
+The total counts (in ADU) in the focal plane from any source can be calculated by multiplying the source
 spectrum, :math:`F_\nu(\lambda)` at the top of the atmosphere in Janskys, by the fractional
 probability of reaching the focal plane and being converted into
 electrons and integrating over wavelength (:math:`S(\lambda)`):
 
 .. math::
-   C = \frac {expTime \,  effArea} {gain \, h} \int { F_\nu(\lambda) \, S(\lambda)  / \lambda  d\lambda }
+   C = \frac {expTime \,  effArea} {g \, h} \int { F_\nu(\lambda) \, \frac{S(\lambda)}{\lambda}  d\lambda }
 
 where expTime = exposure time in seconds (typically 30 seconds for LSST), effArea
 = effective collecting area in cm^2 (effective area-weighted diameter for the LSST primary,
 when occultation from the secondary and tertiary mirrors and
-vignetting effects are included, is 6.423 m), and h = Planck constant. We
-can also use the above formula, together with a conversion from counts
-to AB magnitudes, to calculate the "instrumental zeropoint" in each
-bandpass, the magnitude which would produce one ADU-count per second. The throughput curves used for this analysis are
-based on the throughput components in the `syseng_throughputs <https://github.com/lsst-pst/syseng_throughputs>`_ repository.
-There is more information on the origin of these throughput
-curves and other key number data in the section 'Data Sources' below.
+vignetting effects are included, is 6.423 m), and h = Planck
+constant. The fractional throughput curves, :math:`S(\lambda)`, for
+each component in the LSST hardware system plus a standard
+atmosphere can be found in
+the LSST `syseng_throughputs
+<https://github.com/lsst-pst/syseng_throughputs>`_ github repository.
+
+Instrumental Zeropoints
+-----------------------
+
+We can also use the above formula to calculate the 'instrumental zeropoint' in each bandpass,
+the AB magnitude which would produce one count per second (note this
+value depends on the gain used; here we use gain=1, so the counts in
+ADU = counts in photo-electrons).
 
 +------+--------------------------------------------+
 |Filter|Instrumental Zeropoint (exptime=1s, gain=1) |
@@ -112,6 +71,16 @@ curves and other key number data in the section 'Data Sources' below.
 +------+--------------------------------------------+
 |y     |    26.58                                   |
 +------+--------------------------------------------+
+
+Sky Counts
+----------
+
+When calculating sky background counts per pixel, instead of using the
+entire hardware system plus atmosphere, the :math:`F_\nu(\lambda)`
+value for the sky spectrum should be multiplied by only the
+hardware.\ [#skynote]_ The skybrightness in magnitudes per sq arcsecond then
+is used to calculate counts per sq arcsecond, and converted to counts
+per pixel using the pixelScale, 0.2"/pixel.
 
 The expected sky brightness at zenith, in dark sky, has been
 calculated in each LSST bandpass by generating a dark sky spectrum,
@@ -136,20 +105,101 @@ in good agreement with other measurements from CTIO and ESO.
 |y     |    18.63                       |
 +------+--------------------------------+
 
-The zeropoints above could be used to calculate approximate background
-sky counts, or exact values could be calculated using the spectrum
+The instrumental zeropoints above could be used to calculate approximate background
+sky counts per arcsecond sq or exact values could be calculated using
+the calibrated spectrum
 available at `darksky.dat
 <https://github.com/lsst-pst/syseng_throughputs/blob/master/siteProperties/darksky.dat>`_.
-To calculate the counts from the sky per pixel, we can calculate counts per square arcsecond 
-and convert to per pixel using the platescale, 0.2 "/pixel.
 
-With all of these values, we can calculate the "m5" for each bandpass,
-the :math:`5\sigma` limiting magnitude for point sources in the dark
-sky, zenith case. (Note, this is implemented in the ``calcm5`` method of the
-`SignalToNoise
-<https://github.com/lsst/sims_photUtils/blob/master/python/lsst/sims/photUtils/SignalToNoise.py>`_
-module in `sims_photUtils
-<https://github.com/lsst/sims_photUtils>`_). The resulting values are
+Instrumental Noise
+------------------
+
+The instrumental noise per pixel, :math:`\sigma_{instr}`, can be calculated as
+
+.. math::
+   \sigma_{instr}^2 = (readNoise^2 + (darkCurrent * expTime)) * n_{exp}
+
+where the LSST requirements place upper limits of 0.2 photo-electrons/second/pixel
+on the dark current and 8.8 photo-electrons/pixel/exposure on the
+total readnoise from the camera (sensors plus electronics).
+Tests of vendor prototypes sensors are consistent with these
+requirements.
+
+The current LSST observing plan is to take back-to-back exposures of the same field, each
+exposure 15 seconds long, for a total of :math:`n_{exp}` =2 exposures per 30 second
+long "visit". The total instrumental noise per exposure is  9
+photo-electrons. The combined total instrumental noise per visit is then 12.7 photo-electrons.
+
+Source footprint (:math:`n_{eff}`)
+----------------------------------
+
+Optimal source count extraction means matching the photometry
+footprint to the PSF of the source. Raytrace experiments using models
+of the LSST mirors and focal plane and atmosphere, as well as
+observations from existing telescopes, indicate that the PSF for point
+sources should be similar to a von Karman profile. The details of the profile
+depend independently on the size of the atmospheric IQ and the
+hardware IQ. The conversion factors will be described in a planned
+update of `LSE-40 <http://ls.st/lse-40>`_ and the `LSST Overview Paper
+<http://www.lsst.org/content/lsst-science-drivers-reference-design-and-anticipated-data-products>`_.
+
+Because the SNR calculation only depends on the number of pixels
+contained in the footprint on the focal plane (to determine the sky
+noise and instrumental noise contributions), we calculate :math:`FWHM_{eff}`:
+the FWHM of a single gaussian which contains the same number of pixels
+as the von Karman profile. This must be calculated for the appropriate atmosphere and hardware
+contributions in a given observation.
+
+.. math::
+   FWHM_{sys}(X) = \sqrt{(telSeeing \, X^{0.6})^2 + opticalDesign^2 +
+   cameraSeeing^2}
+
+   FWHM_{eff}(X) = 1.16 \sqrt{FWHM_{sys}^2 + 1.04 \, FWHM_{atm}^2}
+
+where requirements place the system contributions at telSeeing = 0.25”, opticalDesign =
+0.08”, and cameraSeeing = 0.30”. We can then just calculate :math:`n_{eff}` using a single gaussian profile,
+
+.. math::
+   n_{eff} = 2.266 \, (FWHM_{eff} / pixelScale)^2.
+
+For purposes where the physical size of the PSF is important, such as
+modeling moving object trailing losses or galaxy shape measurements, we can
+also calculate :math:`FWHM_{geom}`,
+
+.. math::
+     FWHM_{geom} = 0.822\,FWHM_{eff} + 0.052
+
+:math:`FWHM_{geom}` is typically slightly smaller than
+:math:`FWHM_{eff}`.
+
+The expected median :math:`FWHM_{eff}` at zenith in the various LSST
+bandpasses is
+
++------+-------------------+
+|Filter|:math:`FWHM_{eff}` |
++------+-------------------+
+|u     | 0.92"             |
++------+-------------------+
+|g     | 0.87"             |
++------+-------------------+
+|r     | 0.83"             |
++------+-------------------+
+|i     | 0.80"             |
++------+-------------------+
+|z     | 0.78"             |
++------+-------------------+
+|y     | 0.76"             |
++------+-------------------+
+
+where this includes the expected (and modeled) telescope contribution as well as the distribution of IQ measurements
+from an on-site DIMM.
+
+Calculating m5
+-----------------------------------------------
+
+With all of these values, we can calculate  the :math:`5\sigma`
+limiting magnitude for point sources (m5) in each bandpass, in the dark
+sky, zenith case. The resulting values are
 
 +------+------+
 |Filter|m5    |
@@ -168,8 +218,36 @@ module in `sims_photUtils
 +------+------+
 
 
+Useful github repositories
+--------------------------
+
+The algorithms described in `LSE-40 <http://ls.st/lse-40>`_ are implemented in the LSST
+`sims_photUtils <http://github.com/lsst/sims_photUtils>`_ package,
+available on github. In particular, the
+`SignalToNoise
+<https://github.com/lsst/sims_photUtils/blob/master/python/lsst/sims/photUtils/SignalToNoise.py>`_
+module calculates signal to noise ratios and limiting magnitudes (m5)
+values.
+
+The throughput curves used for this analysis are
+based on the throughput components in the `syseng_throughputs <https://github.com/lsst-pst/syseng_throughputs>`_ repository.
+There is more information on the origin of these throughput
+curves and other key number data in the section 'Data Sources' below.
+
+
+.. [#skynote] The atmosphere should not be included in the calculation of
+        the expected counts in the focal plane, as the sky emission
+        comes from various layers in the atmosphere - a completely
+        proper treatment would involve a radiative transfer model that
+        includes emission and absorption over the entire
+        atmosphere. Instead the standard treatment is to generate a
+        sky brightness and sky spectrum that correspond to the
+        skybrightness at the pupil of the telescope, and then just
+        multiply this by :math:`S_{hardware}(\lambda)` to generate the
+        focal plane counts
+
 Calculating m5 values in the LSST Operations Simulator
--------------------------------------------------------
+======================================================
 
 To rapidly calculate the m5 values reported with each visit in the
 outputs from the Operations Simulator, the SNR formulas above are
@@ -187,25 +265,12 @@ brightness, seeing, airmass, and exposure times.
 
    Tscale = expTime / 30.0 * 10.0^{-0.4*(m_{sky} - m_{darksky})}
 
-The values for :math:`C_m` and :math:`dC_m^{inf}` can be calculated from the m5 value
-of a dark sky, zenith visit.
-
-.. math::
-   C_m = m5 - 0.5\,(m_{darksky} - 21.0) + 2.5 log_{10}(0.7 / FWHM_{eff}) + 1.25 log_{10}(expTime / 30.0)
-
-where :math:`m_{darksky}` is the dark sky background value in the
-bandpass, as described in the table above. A related :math:`C_m^{inf}`
-can be calculated using an m5 value generated by assuming that the
-instrument noise per exposure is 0: the difference between
-:math:`C_m^{inf}` and :math:`C_m` is :math:`dC_m^{inf}`. This term
-accounts for the transition between instrument noise limited
+The :math:`dC_m^{inf}` term accounts for the transition between instrument noise limited
 observations and sky background limited observations as the
-exposure time changes. For most LSST bandpasses, we are
+exposure time or sky brightness varies. For most LSST bandpasses, we are
 sky-noise dominated even in 15 second exposures, but in the u
 band, the sky background is low enough that the exposures become
-read noise limited.
-
-The :math:`k_{atm}` term captures the extinction of the atmosphere and how it
+read noise limited.  The :math:`k_{atm}` term captures the extinction of the atmosphere and how it
 varies with airmass. It can be calculated as :math:`k_{atm} =
 -2.5 log_{10} (T_b / \Sigma_b)`, where :math:`T_b` is the sum of the
 total system throughput in a particular bandpass and :math:`\Sigma_b`
@@ -281,10 +346,25 @@ where the system contributions are telSeeing = 0.25”, opticalDesign =
 0.08”, and cameraSeeing = 0.30”. :math:`\lambda_{eff}` is the
 effective wavelength for each filter:  366, 482, 622, 754, 869 and
 971 nm respectively for u, g, r, i, z, y.
- 
+
+Calculating C_m values
+----------------------
+
+The values for :math:`C_m` and :math:`dC_m^{inf}` can be calculated using the m5 value
+of a dark sky, zenith visit.
+
+.. math::
+   C_m = m5 - 0.5\,(m_{darksky} - 21.0) + 2.5 log_{10}(0.7 / FWHM_{eff}) + 1.25 log_{10}(expTime / 30.0)
+
+where :math:`m_{darksky}` is the dark sky background value in the
+bandpass, as described in the table above. A related :math:`C_m^{inf}`
+can be calculated using an m5 value generated by assuming that the
+instrument noise per exposure is 0. The difference between
+:math:`C_m^{inf}` and :math:`C_m` is :math:`dC_m^{inf}`.
+
 
 Data Sources and References
-------------------------------------
+===========================
 
 Change controlled documents:
  * LSE-40 : "Photon Rates and SNR Calculations" <http://ls.st/lse-40>
@@ -298,22 +378,20 @@ Official project documents not under change control -
  * LSST-PST Syseng_throughputs components git repository  <https://github.com/lsst-pst/syseng_throughputs>
 
 +---------------------------------------------------------+--------+------------------------------------------------------+
-|Primary mirror clear aperture                            | 6.423 m| LSE-29, LSR-REQ-0003, LSST Key Numbers               |
+|Primary mirror clear aperture [#areanote]_               | 6.423 m| LSE-29, LSR-REQ-0003, LSST Key Numbers               |
 +---------------------------------------------------------+--------+------------------------------------------------------+
-|Diameter of field of view                                | 3.5 deg| LSE-29, LSR-REQ-0004                                 |
-+---------------------------------------------------------+--------+------------------------------------------------------+
-|Delivered Image Quality                                  | 0.65"  | Overview Paper, fig. 1 (Site DIMM + telescope model) |
+|Median delivered Image Quality                           | 0.65"  | Overview Paper, fig. 1 (Site DIMM + telescope model) |
 +---------------------------------------------------------+--------+------------------------------------------------------+
 |Total instrumental noise per exposure                    | 9 e-   | LSE-59, CAM-REQ-0020 (readnoise and dark current)    |
++---------------------------------------------------------+--------+------------------------------------------------------+
+|Diameter of field of view                                | 3.5 deg| LSE-29, LSR-REQ-0004                                 |
 +---------------------------------------------------------+--------+------------------------------------------------------+
 |Focal plane coverage (fill factor in active area of FOV) |  >90%  | LSE-30, OSS-REQ-0259                                 |
 +---------------------------------------------------------+--------+------------------------------------------------------+
 |Focal plane coverage (fill factor in active area of FOV) | 91%    | Calculated from focal plane models                   |
 +---------------------------------------------------------+--------+------------------------------------------------------+
 
-The area-weighted clear aperture is 6.423 m across the entire field of view, although this varies with location. Near the center,
-the clear aperture is 6.7 m, while near the edge of the field of view it rolls off by about 10%. 6.423 m is the area-weighted
-average across the full field of view.
+.. [#areanote] The area-weighted clear aperture is 6.423 m across the entire field of view, although this varies with location. Near the center, the clear aperture is 6.7 m, while near the edge of the field of view it rolls off by about 10%. 6.423 m is the area-weighted average across the full field of view.
 
 Throughput curves: `syseng_throughputs github repo <https://github.com/lsst-pst/syseng_throughputs>`_:
 
