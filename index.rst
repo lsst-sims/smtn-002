@@ -39,7 +39,7 @@ electrons and integrating over wavelength (:math:`S(\lambda)`):
    C = \frac {expTime \,  effArea} {g \, h} \int { F_\nu(\lambda) \, \frac{S(\lambda)}{\lambda}  d\lambda }
 
 where expTime = exposure time in seconds (typically 30 seconds for LSST), effArea
-= effective collecting area in cm^2 (effective area-weighted diameter for the LSST primary,
+= effective collecting area in cm^2 (effective area-weighted clear aperture diameter for the LSST primary,
 when occultation from the secondary and tertiary mirrors and
 vignetting effects are included, is 6.423 m), and h = Planck
 constant. The fractional throughput curves, :math:`S(\lambda)`, for
