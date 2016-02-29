@@ -227,7 +227,8 @@ available on github. In particular, the
 `SignalToNoise
 <https://github.com/lsst/sims_photUtils/blob/master/python/lsst/sims/photUtils/SignalToNoise.py>`_
 module calculates signal to noise ratios and limiting magnitudes (m5)
-values.
+values. Here is an `ipython notebook example <https://github.com/lsst/throughputs/blob/master/examples/Calculating%20SNR.ipynb>`_
+using this code to calculate SNR in a variety of situations.
 
 The throughput curves used for this analysis are
 based on the throughput components in the `syseng_throughputs <https://github.com/lsst-pst/syseng_throughputs>`_ repository.
