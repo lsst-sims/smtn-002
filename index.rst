@@ -151,8 +151,7 @@ as the von Karman profile. This must be calculated for the appropriate atmospher
 contributions in a given observation.
 
 .. math::
-   FWHM_{sys}(X) = \sqrt{(telSeeing \, X^{0.6})^2 + opticalDesign^2 +
-   cameraSeeing^2}
+   FWHM_{sys}(X) = X^{0.6} \, \sqrt{(telSeeing^2 + opticalDesign^2 + cameraSeeing^2}
 
    FWHM_{eff}(X) = 1.16 \sqrt{FWHM_{sys}^2 + 1.04 \, FWHM_{atm}^2}
 
