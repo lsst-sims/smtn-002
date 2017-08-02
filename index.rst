@@ -203,17 +203,17 @@ sky, zenith case. The resulting values are
 +------+------+
 |Filter|m5    |
 +------+------+
-|u     |23.60 |
+|u     |23.42 |
 +------+------+
-|g     |24.83 |
+|g     |24.77 |
 +------+------+
-|r     |24.38 |
+|r     |24.34 |
 +------+------+
-|i     |23.92 |
+|i     |23.89 |
 +------+------+
-|z     |23.35 |
+|z     |23.33 |
 +------+------+
-|y     |22.44 |
+|y     |22.42 |
 +------+------+
 
 
@@ -280,17 +280,17 @@ is the sum of the hardware throughput in a particular bandpass
 +------+------+-------+-----+
 |Filter|Cm    |dCm_inf|k_atm|
 +------+------+-------+-----+
-|u     |22.91 | 0.57  |0.50 |
+|u     |22.74 | 0.75  |0.50 |
 +------+------+-------+-----+
-|g     |24.45 | 0.12  |0.21 |
+|g     |24.38 | 0.19  |0.21 |
 +------+------+-------+-----+
-|r     |24.46 | 0.06  |0.13 |
+|r     |24.43 | 0.10  |0.13 |
 +------+------+-------+-----+
-|i     |24.33 | 0.05  |0.10 |
+|i     |24.30 | 0.07  |0.10 |
 +------+------+-------+-----+
-|z     |24.17 | 0.03  |0.07 |
+|z     |24.15 | 0.05  |0.07 |
 +------+------+-------+-----+
-|y     |23.71 | 0.02  |0.18 |
+|y     |23.70 | 0.04  |0.18 |
 +------+------+-------+-----+
 
 These values are used within OpSim to calculate m5 values for each
@@ -367,7 +367,7 @@ Data Sources and References
 ===========================
 
 Change controlled documents:
- * LSE-40 : "Photon Rates and SNR Calculations" <http://ls.st/lse-40>
+ * LSE-40 : "Photon Rates and SNR Calculations" <http://ls.st/lse-40> (useful for SNR eqns, but do not use the outdated values from this document)
  * LSE-29 : "LSST System Requirements" <http://ls.st/lse-29>
  * LSE-30 : "Observatory System Specifications" <http://ls.st/lse-30>
  * LSE-59 : "Camera Subsystem Requirements" <http://ls.st/lse-59>
