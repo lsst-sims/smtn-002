@@ -1,8 +1,20 @@
 sudo: false
 language: python
-python:
-      - 3.4
-install: "pip install -r requirements.txt"
-script: "make html"
-notifications:
-      email: false
+matrix:
+  include:
+    - python: "3.5"
+      env: LTD_MASON_BUILD=true
+install:
+  - pip install -r requirements.txt
+  - pip install "ltd-mason>=0.2,<0.3"
+script:
+  - sphinx-build -b html -a -n -d _build/doctree . _build/html
+after_success:
+  - ltd-mason-travis --html-dir _build/html
+env:
+  global:
+    - LTD_MASON_BUILD=false  # disable builds in regular text matrix
+    - LTD_MASON_PRODUCT="smtn-002"
+    # Add AWS and LTD Keeper credentials as encrypted secrets here
+    - secure: "e5O35NVvBYfdVNeXLsy5EN7L7RouIM4rMlVgsNH7s33FvEYvoyo4v7o9LmiTDJlsOkcuNhtE4Mc4hwNuNMDA95JtrHx23yGb8JY1YHducnPV4WnR7ivQqgQOxx3DpNYjii7e/zvaXjvCf1uvdciQG867YoVsv74zkpaY3evAhSr4P4m7ho9qj4eOCj5GNXtOB8FAw6wOavQJdLgaYly42B9++mVMIqFamrLp44Qvv16FhfOfpVj5jM6AMAOjqTvwQWZDBm3CyCRWkK9m4M4roikqTD8QFpkppoASvadZJpZI7Hk0dAFi0wrt352qhCOdvOVU2gqAhONqbsw4mEEhecT7Ie79i9uA1SztNaEGC4jCPCFLntSw0MFq/1OKHl9cnj1PP7FBJC4fEpvKVVeHNhxMP32FWHfb/5e5808UGlziV7bHQwXWOp3efG3JgX6mHKpxVxdX380LDVbb+KJD/fMmkU9V1Jj2vT4S/v7A6QDleQ02Hgv8JiygJh6k5Ewij82LVVRPTcCErmyhame4AAK6gTFQVyfCZnwP0Yb7Jq1rmjX3kwwBUV/LPG8f+ZpeRMLmdOQnqWmPltvWGSZpi8U7797kyqzzJpj/X/1Buxfsz/kXtNDOMbgrg1OBruy+jUMsew0TUpHLLzsQT9NXAKGYnFn3iotlbH6MrwoAbbw="
+    - secure: "B3UXCiYjmz/N+2uZOwxiMUbyNNUfk/uAPja81t1igwdl+3HmQZgT0Pp6p/d+fy69B/eR6GC647d9fG1vzEHXlinTjpckEXAPV54K5xkLYiiq3xKg/3YVcKaUeTpxOHApIt9H/ULq2Jgg0/V5Ressli/RddHx3EEFq0am7cZxTynVFsdfialLLBjMfSey+WnV7G5AnnizpSWajuj6ii75ODqgKUSIJUYh6S+aXLKP1L5538LSlIRg96RNytOqteDXxN/iCR6h8psmlsaauGivm6BAjBhbPmEIL9JhXzRgPH8nZr9VeKPyvW6kmwXU0kfU1m0KnKEOik0gMc9OIhM14UovXa2RbgS+NB75t72EQ1+vMAWOVlXNhobtpEOdkFjSTeNeJyFRjwudbe1x65DGD90MLFxgvnlE38eGi0ooC4UUGE155FRj0koCcSDRzvowgA4IhfeDUjWeMMi3ng8LBTqVRdJwgHYmciLkj44LB2zg+gSeVUgxY3zN9mbpomgh0WOfylMdFrWQmNJoKlA+Dc9G1kbpFma9PmdRrjfEM3wdubCXUFgl2AdI4dLHn3c39DTWmoLx6SNgvXaUGmVStU1G/vCy017kzg1Iohk2gsfMsgRYvn6zpVXCI979E1Yu+SQP+CIRlbale1IIpPiiv+1FThFuu7u/P+M2VVKN+zA="

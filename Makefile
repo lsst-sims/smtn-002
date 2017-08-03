@@ -2,7 +2,7 @@
 #
 
 # You can set these variables from the command line.
-SPHINXOPTS    =
+SPHINXOPTS    = -n
 SPHINXBUILD   = sphinx-build
 PAPER         =
 BUILDDIR      = _build
@@ -19,13 +19,14 @@ ALLSPHINXOPTS   = -d $(BUILDDIR)/doctrees $(PAPEROPT_$(PAPER)) $(SPHINXOPTS) .
 # the i18n builder cannot share the environment and doctrees with the others
 I18NSPHINXOPTS  = $(PAPEROPT_$(PAPER)) $(SPHINXOPTS) .
 
-.PHONY: help clean html dirhtml singlehtml pickle json htmlhelp qthelp devhelp epub latex latexpdf text man changes linkcheck doctest coverage gettext
+.PHONY: help clean html epub changes linkcheck refresh-bib
 
 help:
 	@echo "Please use \`make <target>' where <target> is one of"
-	@echo "  html       to make standalone HTML files"
-	@echo "  epub       to make an epub"
-	@echo "  linkcheck  to check all external links for integrity"
+	@echo "  html         to make standalone HTML files"
+	@echo "  epub         to make an epub"
+	@echo "  linkcheck    to check all external links for integrity"
+	@echo "  refresh-bib  to update LSST bibliographies in lsstbib/"
 
 clean:
 	rm -rf $(BUILDDIR)/*
@@ -50,3 +51,8 @@ linkcheck:
 	@echo
 	@echo "Link check complete; look for any errors in the above output " \
 	      "or in $(BUILDDIR)/linkcheck/output.txt."
+
+refresh-bib:
+	refresh-lsst-bib -d lsstbib
+	@echo
+	@echo "Commit the new bibliographies: git add lsstbib && git commit -m \"Update bibliographies.\""
