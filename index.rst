@@ -335,7 +335,7 @@ measurements. The raw atmospheric FWHM values (:math:`FWHM_{500}`) are adjusted 
 the image quality delivered by the entire system by
 
 .. math::
-   FWHM_{sys}(X) = \sqrt{(telSeeing \, X^{0.6})^2 + opticalDesign^2 + cameraSeeing^2}
+   FWHM_{sys}(X) = \sqrt{telSeeing^2 + opticalDesign^2 + cameraSeeing^2} \, (X)^{0.6}
 
    FWHM_{atm}(X) = FWHM_{500} \, (\frac{500nm}{\lambda_{eff}})^{0.3} \,   (X)^{0.6}
 
