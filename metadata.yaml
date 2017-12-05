@@ -20,11 +20,11 @@ authors:
     - 'Lynne Jones'
 
 # Current document version
-last_revised: '2016-02-25'
+last_revised: '2017-12-05'
 
 # Version. Use Semvar, e.g., 1.0, including .dev, as necessary
 # This version string should correspond to the git tag when the document is published on Zenodo
-version: '1.0'
+version: ''
 
 # Digital Object Identifier (DOI). Uncomment if available.
 # Keep this DOI updated as new releases are pushed to Zenodo
