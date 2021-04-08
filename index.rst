@@ -59,17 +59,17 @@ ADU = counts in photo-electrons).
 +------+--------------------------------------------+
 |Filter|Instrumental Zeropoint (exptime=1s, gain=1) |
 +------+--------------------------------------------+
-|u     |     26.50                                  |
+|u     |     27.03                                  |
 +------+--------------------------------------------+
-|g     |     28.30                                  |
+|g     |     28.38                                  |
 +------+--------------------------------------------+
-|r     |      28.13                                 |
+|r     |      28.16                                 |
 +------+--------------------------------------------+
-|i     |      27.79                                 |
+|i     |      27.85                                 |
 +------+--------------------------------------------+
-|z     |    27.40                                   |
+|z     |    27.46                                   |
 +------+--------------------------------------------+
-|y     |    26.58                                   |
+|y     |    26.68                                   |
 +------+--------------------------------------------+
 
 Sky Counts
@@ -92,17 +92,17 @@ in good agreement with other measurements from CTIO and ESO.
 +------+--------------------------------+
 |Filter|Sky brightness (mag/arcsecond^2)|
 +------+--------------------------------+
-|u     |     22.95                      |
+|u     |     22.96                      |
 +------+--------------------------------+
-|g     |     22.24                      |
+|g     |     22.26                      |
 +------+--------------------------------+
 |r     |     21.20                      |
 +------+--------------------------------+
-|i     |     20.47                      |
+|i     |     20.48                      |
 +------+--------------------------------+
 |z     |    19.60                       |
 +------+--------------------------------+
-|y     |    18.63                       |
+|y     |    18.61                       |
 +------+--------------------------------+
 
 The instrumental zeropoints above could be used to calculate approximate background
@@ -203,17 +203,17 @@ sky, zenith case. The resulting values are
 +------+------+
 |Filter|m5    |
 +------+------+
-|u     |23.42 |
+|u     |23.87 |
 +------+------+
-|g     |24.77 |
+|g     |24.82 |
 +------+------+
-|r     |24.34 |
+|r     |24.36 |
 +------+------+
-|i     |23.89 |
+|i     |23.93 |
 +------+------+
-|z     |23.33 |
+|z     |23.36 |
 +------+------+
-|y     |22.42 |
+|y     |22.47 |
 +------+------+
 
 
@@ -263,75 +263,56 @@ brightness, seeing, airmass, and exposure times.
    dC_m = dC_m^{inf} - 1.25 log_{10}(1 + (10^{(0.8\, dC_m^{inf} -
    1)}/Tscale)
 
-   Tscale = expTime / 30.0 * 10.0^{-0.4*(m_{sky} - m_{darksky})}
+   Tscale = expTime / 15.0 * 10.0^{-0.4*(m_{sky} - m_{darksky})}
 
 The :math:`dC_m^{inf}` term accounts for the transition between instrument noise limited
 observations and sky background limited observations as the
 exposure time or sky brightness varies. For most LSST bandpasses, we are
 sky-noise dominated even in 15 second exposures, but in the u
 band, the sky background is low enough that the exposures become
-read noise limited.  The :math:`k_{atm}` term captures the extinction of the atmosphere and how it
+read noise limited (thus :math:`dC_m^{inf}` has an associated base exposure time used
+in its calculation and applied to :math:`Tscale`; this is 15s above).
+The :math:`k_{atm}` term captures the extinction of the atmosphere and how it
 varies with airmass. It can be calculated as :math:`k_{atm} =
 -2.5 log_{10} (T_b / \Sigma_b)`, where :math:`T_b` is the sum of the
 total system throughput in a particular bandpass and :math:`\Sigma_b`
 is the sum of the hardware throughput in a particular bandpass
 (without the atmosphere).
 
+
 +------+------+-------+-----+
 |Filter|Cm    |dCm_inf|k_atm|
 +------+------+-------+-----+
-|u     |22.74 | 0.75  |0.50 |
+|u     |23.39 | 0.37  |0.50 |
 +------+------+-------+-----+
-|g     |24.38 | 0.19  |0.21 |
+|g     |24.51 | 0.10  |0.21 |
 +------+------+-------+-----+
-|r     |24.43 | 0.10  |0.13 |
+|r     |24.49 | 0.05  |0.13 |
 +------+------+-------+-----+
-|i     |24.30 | 0.07  |0.10 |
+|i     |24.37 | 0.04  |0.10 |
 +------+------+-------+-----+
-|z     |24.15 | 0.05  |0.07 |
+|z     |24.21 | 0.02  |0.07 |
 +------+------+-------+-----+
-|y     |23.70 | 0.04  |0.18 |
+|y     |23.77 | 0.02  |0.17 |
 +------+------+-------+-----+
 
-These values are used within OpSim to calculate m5 values for each
-pointing in the ``calc_m5`` function in `gen_output.py
-<https://github.com/lsst/sims_operations/blob/master/tools/schema_tools/gen_output.py>`_
-within the `sims_operations
-<https://github.com/lsst/sims_operations>`_ codebase.
+These values can be used with the ``m5_scale`` function
+to calculate m5 values under varying exposure times, skybrightness or seeing.
+The `m5_scale <https://github.com/lsst/sims_utils/blob/master/python/lsst/sims/utils/m5_flat_sed.py#L7>`_
+function is available within the `sims_utils <https://github.com/lsst/sims_utils>`_ package.
 
-The remaining required inputs to calculate m5 in OpSim are the sky
-brightness and the seeing, as the airmass and exposure time will come
-from the scheduling data itself.
-
-The sky brightness is currently
-calculated using a V-band sky brightness model based on Krisciunas &
-Schafer (1991) `(K&S) <http://adsabs.harvard.edu/abs/1991PASP..103.1033K>`_,
-which is then adjusted to give sky brightness values in various
-bandpasses using color terms that depend on the phase of the
-moon. The V-band sky brightness calculations are implemented in the
-`AstronomicalSky.py <https://github.com/lsst/sims_operations/blob/master/python/lsst/sims/operations/AstronomicalSky.py>`_
-module of OpSim, and the per-filter adjustments based on lunar phase
-are done in
-`Filters.py <https://github.com/lsst/sims_operations/blob/master/python/lsst/sims/operations/Filters.py>`_.
-The current OpSim model simply sets y band skybrightness to 17.3 and implements a
-step-function for twilight if the altitude of the sun is above -18
-degrees, setting the sky brightness to 17.0 in z and y (and the
-scheduler is then constrained to observed in z and y during this time,
-currently). In the near future we will be updating the OpSim sky
-brightness model, to a new
-`sims_skybrightness <https://github.com/lsst/sims_skybrightness>`_
-model that more closely follows the `ESO sky calculator
+For each pointing in OpSim, the skybrightness and seeing come from various
+simulated telemetry streams, and airmass and exposure time come from
+the scheduling data itself. The skybrightness comes from our
+`sims_skybrightness <http://github.com/lsst/sims_skybrightness>`_ package. It
+is based on the `ESO sky calculator
 <https://www.eso.org/observing/etc/bin/gen/form?INS.MODE=swspectr+INS.NAME=SKYCALC>`_
 along with an empirical model for twilight. The sims_skybrightness model has
-been validated with nearly a year of on-site all-sky measurements. The current model
-has various flaws compared to the upcoming new model, but for the most
-part these flaws result in a brighter sky brightness value being used
-currently than the more realistic sims_skybrightness model predicts
-(see `comparison <https://community.lsst.org/t/comparing-eso-sky-model-to-current-opsim-sky-values/489>`_).
-
-The input seeing data used in OpSim are the atmosphere-only FWHM at
-500 nm at zenith,  based on three years of on-site DIMM
-measurements. The raw atmospheric FWHM values (:math:`FWHM_{500}`) are adjusted to
+been validated with nearly a year of on-site all-sky measurements.
+The seeing  comes from our `sims_seeingModel <http://github.com/lsst/sims_seeingModel>`_
+package, which uses 10 years of seeing data from Cerro Pachon as inputs.
+The seeing model generates atmosphere-only FWHM at 500nm at zenith; these
+raw atmospheric FWHM values (:math:`FWHM_{500}`) are adjusted to
 the image quality delivered by the entire system by
 
 .. math::
