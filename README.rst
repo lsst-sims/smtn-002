@@ -14,7 +14,9 @@ Document Title
 SMTN-002
 =========
 
-A short description of this document
+**Calculating LSST limiting magnitudes and SNR**
+
+This technote documents the various m5 calculation tools and explains the traceability of the underlying data/throughput curves.
 
 **Links:**
 
