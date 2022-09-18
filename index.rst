@@ -171,8 +171,8 @@ also calculate :math:`FWHM_{geom}`,
 :math:`FWHM_{geom}` is typically slightly smaller than
 :math:`FWHM_{eff}`.
 
-The expected median :math:`FWHM_{eff}` at zenith in the various LSST
-bandpasses is
+The expected fiducial :math:`FWHM_{eff}` at zenith in the various LSST
+bandpasses (based on the fiducial atmospheric seeing value expected from the SRD) is
 
 +------+-------------------+
 |Filter|:math:`FWHM_{eff}` |
@@ -193,44 +193,61 @@ bandpasses is
 where this includes the expected (and modeled) telescope contribution as well as the distribution of IQ measurements
 from an on-site DIMM.
 
+
 Calculating m5
 -----------------------------------------------
 
 With all of these values, we can calculate  the :math:`5\sigma`
 limiting magnitude for point sources (m5) in each bandpass, in the dark
-sky, zenith case. The resulting values are
+sky, zenith case, assuming visits consist of a single 30s exposure.
+The resulting values are
 
 +------+------+
 |Filter|m5    |
 +------+------+
-|u     |23.87 |
+|u     |24.07 |
 +------+------+
-|g     |24.82 |
+|g     |24.90 |
 +------+------+
-|r     |24.36 |
+|r     |24.40 |
 +------+------+
-|i     |23.93 |
+|i     |23.96 |
 +------+------+
-|z     |23.36 |
+|z     |23.38 |
 +------+------+
-|y     |22.47 |
+|y     |22.49 |
 +------+------+
+
+It is worth noting that the final exposure times in the LSST survey may vary from
+a simple 1x30s visit. In particular, in filters other than u band, visits should be
+assumed to be 2x15s (instead of 1x30s); this makes a small difference in bands other
+than u (which is why we use 1x30s for the calculation above, as visits are expected
+to be 30s long in u band).
+
+It is also worth referring to [PSTN-054](https://pstn-054.lsst.io) for a more in-depth
+update on expected m5 values, including accounting for the effects of observing over a range
+of conditions during operations. Due to different seeing distributions, skybrightness distributions,
+and airmass distributions, median expected m5 depths diverge from those above.
 
 
 Useful github repositories
 --------------------------
 
 The algorithms described in `LSE-40 <http://ls.st/lse-40>`_ are implemented in the LSST
-`sims_photUtils <http://github.com/lsst/sims_photUtils>`_ package,
+`rubin_sim.photUtils <http://github.com/lsst/rubin_sim>`_ package,
 available on github. In particular, the
 `SignalToNoise
-<https://github.com/lsst/sims_photUtils/blob/master/python/lsst/sims/photUtils/SignalToNoise.py>`_
+<https://github.com/lsst/rubin_sim/blob/main/rubin_sim/photUtils/SignalToNoise.py>`_
 module calculates signal to noise ratios and limiting magnitudes (m5)
-values. Here is an `ipython notebook example <https://github.com/lsst/throughputs/blob/master/examples/Calculating%20SNR.ipynb>`_
+values. Here is a
+`jupyter notebook example <https://github.com/lsst/rubin_sim_notebooks/blob/main/photometry/Calculating%20SNR.ipynb>`_
 using this code to calculate SNR in a variety of situations.
 
 The throughput curves used for this analysis are
-based on the throughput components in the `syseng_throughputs <https://github.com/lsst-pst/syseng_throughputs>`_ repository.
+based on the throughput components in
+`syseng_throughputs <https://github.com/lsst-pst/syseng_throughputs>`_ repository.
+These throughput curves are then propagated to ``rubin_sim_data``, in a modified format that
+incorporates average losses over time (instead of maintaining these as separate components).
 There is more information on the origin of these throughput
 curves and other key number data in the section 'Data Sources' below.
 
@@ -260,7 +277,7 @@ brightness, seeing, airmass, and exposure times.
    FWHM_{eff}) \\
    + 1.25 log_{10}(expTime / 30.0) - k_{atm}\,(X-1.0)
 
-   dC_m = dC_m^{inf} - 1.25 log_{10}(1 + (10^{(0.8\, dC_m^{inf} -
+   dC_m = dC_m^{inf} - 1.25 log_{10}(1 + {(10^{(0.8\, dC_m^{inf})} -
    1)}/Tscale)
 
    Tscale = expTime / 15.0 * 10.0^{-0.4*(m_{sky} - m_{darksky})}
@@ -296,20 +313,18 @@ is the sum of the hardware throughput in a particular bandpass
 |y     |23.77 | 0.02  |0.17 |
 +------+------+-------+-----+
 
-These values can be used with the ``m5_scale`` function
+These values can be used with the ``rubin_sim.utils``
+`m5_scale <https://github.com/lsst/rubin_sim/blob/main/rubin_sim/utils/m5_flat_sed.py#L7>`_ function
 to calculate m5 values under varying exposure times, skybrightness or seeing.
-The `m5_scale <https://github.com/lsst/sims_utils/blob/master/python/lsst/sims/utils/m5_flat_sed.py#L7>`_
-function is available within the `sims_utils <https://github.com/lsst/sims_utils>`_ package.
 
 For each pointing in OpSim, the skybrightness and seeing come from various
 simulated telemetry streams, and airmass and exposure time come from
-the scheduling data itself. The skybrightness comes from our
-`sims_skybrightness <http://github.com/lsst/sims_skybrightness>`_ package. It
+the scheduling data itself. The skybrightness comes from ``rubin_sim.skybrightness``. It
 is based on the `ESO sky calculator
 <https://www.eso.org/observing/etc/bin/gen/form?INS.MODE=swspectr+INS.NAME=SKYCALC>`_
-along with an empirical model for twilight. The sims_skybrightness model has
+along with an empirical model for twilight. The rubin_sim skybrightness model has
 been validated with nearly a year of on-site all-sky measurements.
-The seeing  comes from our `sims_seeingModel <http://github.com/lsst/sims_seeingModel>`_
+The seeing  comes from ``rubin_sim.site_models``
 package, which uses 10 years of seeing data from Cerro Pachon as inputs.
 The seeing model generates atmosphere-only FWHM at 500nm at zenith; these
 raw atmospheric FWHM values (:math:`FWHM_{500}`) are adjusted to
@@ -348,15 +363,17 @@ Data Sources and References
 ===========================
 
 Change controlled documents:
- * LSE-40 : "Photon Rates and SNR Calculations" <http://ls.st/lse-40> (useful for SNR eqns, but do not use the outdated values from this document)
- * LSE-29 : "LSST System Requirements" <http://ls.st/lse-29>
- * LSE-30 : "Observatory System Specifications" <http://ls.st/lse-30>
- * LSE-59 : "Camera Subsystem Requirements" <http://ls.st/lse-59>
+ * LSE-40 : "Photon Rates and SNR Calculations" http://ls.st/lse-40 (useful for SNR eqns, but do not use the outdated values from this document)
+ * LSE-29 : "LSST System Requirements" http://ls.st/lse-29
+ * LSE-30 : "Observatory System Specifications" http://ls.st/lse-30
+ * LSE-59 : "Camera Subsystem Requirements" http://ls.st/lse-59
 
 Official project documents not under change control -
- * The LSST Overview Paper <http://www.lsst.org/content/lsst-science-drivers-reference-design-and-anticipated-data-products>
- * LSST Key Numbers <http://lsst.org/scientists/keynumbers>
- * LSST-PST Syseng_throughputs components git repository  <https://github.com/lsst-pst/syseng_throughputs>
+ * The LSST Overview Paper http://ls.st/document-5462
+ * LSST Key Numbers http://lsst.org/scientists/keynumbers
+ * LSST-PST Syseng_throughputs components git repository  https://github.com/lsst-pst/syseng_throughputs
+ * SMTN-002 https://smtn-002.lsst.io  (this documnent)
+ * PSTN-054 https://pstn-054.lsst.io
 
 +---------------------------------------------------------+--------+------------------------------------------------------+
 |Primary mirror clear aperture [#areanote]_               | 6.423 m| LSE-29, LSR-REQ-0003, LSST Key Numbers               |
@@ -395,15 +412,14 @@ Throughput curves: `syseng_throughputs github repo <https://github.com/lsst-pst/
 The throughput curves in the syseng_throughputs repository track
 the expected performance of the components of the LSST systems.
 There are versions of these throughput curves packaged for
-distribution in the `throughputs <https://github.com/lsst/throughputs>`_ github repository, along
-with jupyter notebook examples of calculating SNR using these curves and the sims_photUtils package,
-such as `this notebook <https://github.com/lsst/throughputs/blob/Update-from-syseng_/examples/Calculating%20SNR.ipynb>`_.
+distribution in the `throughputs <https://github.com/lsst/throughputs>`_ github repository,
+as well as with `rubin_sim_data <https://s3df.slac.stanford.edu/data/rubin/sim-data/rubin_sim_data/>_`.
 
 The dark sky sky brightness values come from a dark sky, zenith
 spectrum which produces broadband dark sky background measurements
-consistent with observed values at SDSS and other sites. We have a new
-`skybrightness <https://github.com/lsst/sims_skybrightness>`_ package in development which is also in general agreement with
-these dark sky values. The new sky brightness simulator includes
+consistent with observed values at SDSS and other sites. The skybrightness
+from ``rubin_sim.skybrightness`` is also in general agreement with
+these dark sky values. The ``rubin_sim`` skybrightness simulator includes
 twilight sky brightness, as well as explicit components contributed by
 the moon, zodiacal light, airglow and sky emission lines - it is based
 on the `ESO sky calculator
