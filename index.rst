@@ -139,9 +139,8 @@ of the LSST mirors and focal plane and atmosphere, as well as
 observations from existing telescopes, indicate that the PSF for point
 sources should be similar to a von Karman profile. The details of the profile
 depend independently on the size of the atmospheric IQ and the
-hardware IQ. The conversion factors will be described in a planned
-update of `LSE-40 <http://ls.st/lse-40>`_ and the `LSST Overview Paper
-<http://www.lsst.org/content/lsst-science-drivers-reference-design-and-anticipated-data-products>`_.
+hardware IQ. The conversion factors are described in the `Document 20160 <http://ls.st/document-20610>_`
+by Bo Xin and Zeljko Ivezic.
 
 Because the SNR calculation only depends on the number of pixels
 contained in the footprint on the focal plane (to determine the sky
@@ -224,7 +223,7 @@ assumed to be 2x15s (instead of 1x30s); this makes a small difference in bands o
 than u (which is why we use 1x30s for the calculation above, as visits are expected
 to be 30s long in u band).
 
-It is also worth referring to [PSTN-054](https://pstn-054.lsst.io) for a more in-depth
+It is also worth referring to `PSTN-054 <https://pstn-054.lsst.io>`_ for a more in-depth
 update on expected m5 values, including accounting for the effects of observing over a range
 of conditions during operations. Due to different seeing distributions, skybrightness distributions,
 and airmass distributions, median expected m5 depths diverge from those above.
@@ -413,7 +412,7 @@ The throughput curves in the syseng_throughputs repository track
 the expected performance of the components of the LSST systems.
 There are versions of these throughput curves packaged for
 distribution in the `throughputs <https://github.com/lsst/throughputs>`_ github repository,
-as well as with `rubin_sim_data <https://s3df.slac.stanford.edu/data/rubin/sim-data/rubin_sim_data/>_`.
+as well as with `rubin_sim_data <https://s3df.slac.stanford.edu/data/rubin/sim-data/rubin_sim_data/>`_.
 
 The dark sky sky brightness values come from a dark sky, zenith
 spectrum which produces broadband dark sky background measurements
