@@ -1,0 +1,17 @@
+[technote]
+id = "SMTN-002"
+series_id = "SMTN"
+canonical_url = "https://smtn-002.lsst.io/"
+github_url = "https://github.com/lsst-sims/smtn-002"
+github_default_branch = "main"
+organization.name = "Vera C. Rubin Observatory"
+organization.ror = "https://ror.org/048g3cy84"
+license.id = "CC-BY-4.0"
+[[technote.authors]]
+name = {given = "R. Lynne", family = "Jones"}
+internal_id = "jonesrl"
+orcid = "https://orcid.org/0000-0001-5916-0031"
+[[technote.authors.affiliations]]
+name = "University of Washington"
+internal_id = "Washington"
+address = "Dept. of Astronomy, Box 351580, Seattle, WA 98195, USA"
