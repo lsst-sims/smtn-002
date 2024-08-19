@@ -335,7 +335,7 @@ Official project documents not under change control -
 
 ```{eval-rst}
 +---------------------------------------------------------+--------+------------------------------------------------------+
-|Primary mirror clear aperture [#areanote]_               | 6.423 m| LSE-29, LSR-REQ-0003, LSST Key Numbers               |
+|Primary mirror clear aperture [^areanote]                | 6.423 m| LSE-29, LSR-REQ-0003, LSST Key Numbers               |
 +---------------------------------------------------------+--------+------------------------------------------------------+
 |Total instrumental noise per exposure                    | 9 e-   | LSE-59, CAM-REQ-0020 (readnoise and dark current)    |
 +---------------------------------------------------------+--------+------------------------------------------------------+
