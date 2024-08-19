@@ -128,8 +128,8 @@ of the LSST mirors and focal plane and atmosphere, as well as
 observations from existing telescopes, indicate that the PSF for point
 sources should be similar to a von Karman profile. The details of the profile
 depend independently on the size of the atmospheric IQ and the
-hardware IQ. The conversion factors are described in the `Document 20160 <http://ls.st/document-20610>_`
-by Bo Xin and Zeljko Ivezic.
+hardware IQ. The conversion factors are described in the [Document 20160](http://ls.st/document-20160)
+by Bo Xin, George Angeli, and Zeljko Ivezic.
 
 Because the SNR calculation only depends on the number of pixels
 contained in the footprint on the focal plane (to determine the sky
