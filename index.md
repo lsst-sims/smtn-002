@@ -11,7 +11,7 @@ information on the expected LSST camera and telescope components.
 
 The appropriate methodology to calculate SNR values for PSF-optimized
 photometry is outlined in the LSST Change Controlled Document
-[LSE-40](http://ls.st/lse-40), and partially summarized below. Note
+[LSE-40](https://ls.st/lse-40), and partially summarized below. Note
 that LSE-40 was written with outdated throughput curves and
 with an outdated understanding of the PSF profile which means the 
 actual numerical values  calculated in that document are should not be used.
@@ -128,7 +128,7 @@ of the LSST mirors and focal plane and atmosphere, as well as
 observations from existing telescopes, indicate that the PSF for point
 sources should be similar to a von Karman profile. The details of the profile
 depend independently on the size of the atmospheric IQ and the
-hardware IQ. The conversion factors are described in the [Document 20160](http://ls.st/document-20160)
+hardware IQ. The conversion factors are described in the [Document 20160](https://ls.st/document-20160)
  by Bo Xin, George Angeli, and Zeljko Ivezic.
 
 Because the SNR calculation only depends on the number of pixels
@@ -207,8 +207,8 @@ and airmass distributions, median expected m5 depths diverge from those above. (
 
 ### Useful github repositories
 
-The algorithms described in [LSE-40](http://ls.st/lse-40) are implemented in the LSST
-[rubin_sim.photUtils](http://github.com/lsst/rubin_sim) package,
+The algorithms described in [LSE-40](https://ls.st/lse-40) are implemented in the LSST
+[rubin_sim.photUtils](https://github.com/lsst/rubin_sim) package,
 available on github. In particular, the
 [SignalToNoise](https://github.com/lsst/rubin_sim/blob/main/rubin_sim/phot_utils/signaltonoise.py)
 module calculates signal to noise ratios and limiting magnitudes (m5)
@@ -321,17 +321,18 @@ $C_m^{inf}$ and $C_m$ is $dC_m^{inf}$.
 ## Data Sources and References
 
 Change controlled documents:
-: - LSE-40 : "Photon Rates and SNR Calculations" <http://ls.st/lse-40> (useful for SNR eqns, but do not use the outdated values from this document)
-  - LSE-29 : "LSST System Requirements" <http://ls.st/lse-29>
-  - LSE-30 : "Observatory System Specifications" <http://ls.st/lse-30>
-  - LSE-59 : "Camera Subsystem Requirements" <http://ls.st/lse-59>
+: - LSE-40 : "Photon Rates and SNR Calculations" <https://ls.st/lse-40> (useful for SNR eqns, but do not use the outdated values from this document)
+  - LSE-29 : "LSST System Requirements" <https://ls.st/lse-29>
+  - LSE-30 : "Observatory System Specifications" <https://ls.st/lse-30>
+  - LSE-59 : "Camera Subsystem Requirements" <https://ls.st/lse-59>
 
 Official project documents not under change control -
 : - The LSST Overview Paper <http://ls.st/document-5462>
   - LSST Key Numbers <http://lsst.org/scientists/keynumbers>
   - LSST-PST Syseng_throughputs components git repository  <https://github.com/lsst-pst/syseng_throughputs>
-  - SMTN-002 <https://smtn-002.lsst.io>  (this documnent)
+  - SMTN-002 <https://smtn-002.lsst.io>  (this document)
   - PSTN-054 <https://pstn-054.lsst.io>
+  - Atmospheric and Delivered Image Quality in OpSim  <https://ls.st/document-20160>
 
 | Additional Data                               | Value | Reference |
 |:---------------------------------------------------------|------:|---------------:|
