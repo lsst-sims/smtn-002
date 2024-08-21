@@ -54,9 +54,9 @@ code in syseng_throughputs provides an easy way to combine the
 individual throughput components, resulting in a total throughput curve
 for each bandpass.
 
-### Instrumental Zeropoints
+### Photometric Zeropoints
 
-We can also use the above formula to calculate the 'instrumental zeropoint' in each bandpass. This is
+We can also use the above formula to calculate the 'instrumental zeropoint with the standard atmosphere' in each bandpass. This is
 the AB magnitude which would produce one count per second (note this
 value depends on the gain used; here we use gain=1, so the counts in
 ADU = counts in photo-electrons).
@@ -128,8 +128,8 @@ of the LSST mirors and focal plane and atmosphere, as well as
 observations from existing telescopes, indicate that the PSF for point
 sources should be similar to a von Karman profile. The details of the profile
 depend independently on the size of the atmospheric IQ and the
-hardware IQ. The conversion factors are described in the `Document 20160 <http://ls.st/document-20610>_`
-by Bo Xin and Zeljko Ivezic.
+hardware IQ. The conversion factors are described in the [Document 20160](http://ls.st/document-20160)
+ by Bo Xin, George Angeli, and Zeljko Ivezic.
 
 Because the SNR calculation only depends on the number of pixels
 contained in the footprint on the focal plane (to determine the sky
@@ -333,19 +333,14 @@ Official project documents not under change control -
   - SMTN-002 <https://smtn-002.lsst.io>  (this documnent)
   - PSTN-054 <https://pstn-054.lsst.io>
 
-```{eval-rst}
-+---------------------------------------------------------+--------+------------------------------------------------------+
-|Primary mirror clear aperture [#areanote]_               | 6.423 m| LSE-29, LSR-REQ-0003, LSST Key Numbers               |
-+---------------------------------------------------------+--------+------------------------------------------------------+
-|Total instrumental noise per exposure                    | 9 e-   | LSE-59, CAM-REQ-0020 (readnoise and dark current)    |
-+---------------------------------------------------------+--------+------------------------------------------------------+
-|Diameter of field of view                                | 3.5 deg| LSE-29, LSR-REQ-0004                                 |
-+---------------------------------------------------------+--------+------------------------------------------------------+
-|Focal plane coverage (fill factor in active area of FOV) |  >90%  | LSE-30, OSS-REQ-0259                                 |
-+---------------------------------------------------------+--------+------------------------------------------------------+
-|Focal plane coverage (fill factor in active area of FOV) | 91%    | Calculated from focal plane models                   |
-+---------------------------------------------------------+--------+------------------------------------------------------+
-```
+| Additional Data                               | Value | Reference |
+|:---------------------------------------------------------|------:|---------------:|
+| Primary mirror clear aperture [^areanote]                | 6.423 m| LSE-29, LSR-REQ-0003, LSST Key Numbers               |
+| Total instrumental noise per exposure                    | 9 e-   | LSE-59, CAM-REQ-0020 (readnoise and dark current)    |
+| Diameter of field of view                                | 3.5 deg| LSE-29, LSR-REQ-0004                                 |
+| Focal plane coverage (fill factor in active area of FOV) |  >90%  | LSE-30, OSS-REQ-0259                                 |
+| Focal plane coverage (fill factor in active area of FOV) | 91%    | Calculated from focal plane models                   |
+
 
 [^areanote]: The area-weighted clear aperture is 6.423 m across the entire field of view, although this varies with location. Near the center, the clear aperture is 6.7 m, while near the edge of the field of view it rolls off by about 10%. 6.423 m is the area-weighted average across the full field of view.
 
