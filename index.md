@@ -26,7 +26,7 @@ $$
 
 where C = total source counts, B = sky background counts per
 pixel, $\sigma_{instr}$ is the instrumental noise per pixel (all
-in ADU) and g = gain. The LSST expected gain is 2.3 electron/ADU, but for purposes of
+in ADU) and g = gain. The LSST expected gain is between 1.5 to 1.7 electron/ADU, but for purposes of
 calculating SNR or m5, it can safely be assumed to be 1, which has the
 nice property that then all quantities are equivalent in ADU or
 photo-electrons.
