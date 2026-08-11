@@ -2,6 +2,8 @@
 
 This technote documents the various m5 calculation tools and provides some summary information to facilitate calculating SNR and m5 values. The throughput curves used for this analysis are from  **`v1.9`** of the syseng_throughput repo, which includes the 'triple silver' mirror coatings, and as-measured mirror, filter and lens throughputs.
 
+DOI: [10.71929/rubin/3408482](https://doi.org/10.71929/rubin/3408482)
+
 ## Calculating SNR
 
 Calculating either signal to noise ratios for various sources, or

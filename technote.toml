@@ -5,6 +5,7 @@ canonical_url = "https://smtn-002.lsst.io/"
 date_created = 2016-02-24T04:13:05Z
 github_url = "https://github.com/lsst-sims/smtn-002"
 github_default_branch = "main"
+doi = "https://doi.org/10.71929/rubin/3408482"
 organization.name = "Vera C. Rubin Observatory"
 organization.ror = "https://ror.org/048g3cy84"
 license.id = "CC-BY-4.0"
