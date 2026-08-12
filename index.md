@@ -1,6 +1,10 @@
 # Calculating LSST limiting magnitudes and SNR
 
+```{abstract}
 This technote documents the various m5 calculation tools and provides some summary information to facilitate calculating SNR and m5 values. The throughput curves used for this analysis are from  **`v1.9`** of the syseng_throughput repo, which includes the 'triple silver' mirror coatings, and as-measured mirror, filter and lens throughputs.
+```
+
+DOI: [10.71929/rubin/3408482](https://doi.org/10.71929/rubin/3408482)
 
 ## Calculating SNR
 
@@ -11,9 +15,9 @@ information on the expected LSST camera and telescope components.
 
 The appropriate methodology to calculate SNR values for PSF-optimized
 photometry is outlined in the LSST Change Controlled Document
-[LSE-40](https://ls.st/lse-40), and partially summarized below. Note
+[LSE-40](https://ls.st/lse-40) {cite:p}`LSE-40`, and partially summarized below. Note
 that LSE-40 was written with outdated throughput curves and
-with an outdated understanding of the PSF profile which means the 
+with an outdated understanding of the PSF profile which means the
 actual numerical values  calculated in that document are should not be used.
 
 The SNR calculation can be summarized as follows:
@@ -50,7 +54,7 @@ constant. The fractional throughput curves, $S(\lambda)$, for
 each component in the LSST hardware system plus a standard
 atmosphere can be found in
 the LSST [syseng_throughputs](https://github.com/lsst-pst/syseng_throughputs) github repository. The python
-code in syseng_throughputs provides an easy way to combine the 
+code in syseng_throughputs provides an easy way to combine the
 individual throughput components, resulting in a total throughput curve
 for each bandpass.
 
@@ -128,8 +132,7 @@ of the LSST mirors and focal plane and atmosphere, as well as
 observations from existing telescopes, indicate that the PSF for point
 sources should be similar to a von Karman profile. The details of the profile
 depend independently on the size of the atmospheric IQ and the
-hardware IQ. The conversion factors are described in the [Document 20160](https://ls.st/document-20160)
- by Bo Xin, George Angeli, and Zeljko Ivezic.
+hardware IQ. The conversion factors are described in {cite:t}`Document-20160`.
 
 Because the SNR calculation only depends on the number of pixels
 contained in the footprint on the focal plane (to determine the sky
@@ -200,14 +203,14 @@ assumed to be 2x15s (instead of 1x30s); this makes a small difference in bands o
 than u (which is why we use 1x30s for the calculation above, as visits are expected
 to be 30s long in u band).
 
-It is also worth referring to [PSTN-054](https://pstn-054.lsst.io) for a more in-depth
+It is also worth referring to [PSTN-054](https://pstn-054.lsst.io) {cite:p}`PSTN-054` for a more in-depth
 update on expected m5 values, including accounting for the effects of observing over a range
 of conditions during operations. Due to different seeing distributions, skybrightness distributions,
 and airmass distributions, median expected m5 depths diverge from those above. (although note that at present, PSTN-054 uses v1.7 of the throughput curves).
 
 ### Useful github repositories
 
-The algorithms described in [LSE-40](https://ls.st/lse-40) are implemented in the LSST
+The algorithms described in [LSE-40](https://ls.st/lse-40) {cite:labelpar}`LSE-40` are implemented in the LSST
 [rubin_sim.photUtils](https://github.com/lsst/rubin_sim) package,
 available on github. In particular, the
 [SignalToNoise](https://github.com/lsst/rubin_sim/blob/main/rubin_sim/phot_utils/signaltonoise.py)
@@ -321,18 +324,18 @@ $C_m^{inf}$ and $C_m$ is $dC_m^{inf}$.
 ## Data Sources and References
 
 Change controlled documents:
-: - LSE-40 : "Photon Rates and SNR Calculations" <https://ls.st/lse-40> (useful for SNR eqns, but do not use the outdated values from this document)
-  - LSE-29 : "LSST System Requirements" <https://ls.st/lse-29>
-  - LSE-30 : "Observatory System Specifications" <https://ls.st/lse-30>
-  - LSE-59 : "Camera Subsystem Requirements" <https://ls.st/lse-59>
+: - LSE-40 : "Photon Rates and SNR Calculations" <https://ls.st/lse-40> (useful for SNR eqns, but do not use the outdated values from this document) {cite:labelpar}`LSE-40`
+  - LSE-29 : "LSST System Requirements" <https://ls.st/lse-29> {cite:labelpar}`LSE-29`
+  - LSE-30 : "Observatory System Specifications" <https://ls.st/lse-30> {cite:labelpar}`LSE-30`
+  - LSE-59 : "Camera Subsystem Requirements" <https://ls.st/lse-59> {cite:labelpar}`LSE-59`
 
 Official project documents not under change control -
-: - The LSST Overview Paper <http://ls.st/document-5462>
+: - The LSST Overview Paper {cite:p}`2019ApJ...873..111I`
   - LSST Key Numbers <http://lsst.org/scientists/keynumbers>
   - LSST-PST Syseng_throughputs components git repository  <https://github.com/lsst-pst/syseng_throughputs>
   - SMTN-002 <https://smtn-002.lsst.io>  (this document)
-  - PSTN-054 <https://pstn-054.lsst.io>
-  - Atmospheric and Delivered Image Quality in OpSim  <https://ls.st/document-20160>
+  - PSTN-054 <https://pstn-054.lsst.io> {cite:labelpar}`PSTN-054`
+  - Atmospheric and Delivered Image Quality in OpSim  <https://ls.st/document-20160> {cite:labelpar}`Document-20160`
 
 | Additional Data                               | Value | Reference |
 |:---------------------------------------------------------|------:|---------------:|
@@ -369,3 +372,9 @@ Engineering). The atmospheric FWHM measurements come from an on-site
 DIMM, described in more depth in the Site Selection documents. The
 DIMM measurements were cross-checked with measurements coming from
 nearby atmospheric monitoring systems from other observatories.
+
+## References
+
+```{bibliography}
+  :style: lsst_aa
+```
